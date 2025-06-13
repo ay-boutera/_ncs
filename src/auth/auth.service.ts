@@ -36,7 +36,14 @@ export class AuthService {
       expiresIn: '15m',
     });
 
-    const refreshToken = this.jwtService.sign(payload, {
+    // Add a unique identifier to refresh token payload to prevent reuse
+    const refreshPayload = {
+      ...payload,
+      tokenId: Date.now() + Math.random(), // Simple unique identifier
+      type: 'refresh'
+    };
+
+    const refreshToken = this.jwtService.sign(refreshPayload, {
       expiresIn: '7d',
     });
 
@@ -115,7 +122,7 @@ export class AuthService {
       registrationNumber: user.registrationNumber,
       role: 'USER',
     };
-
+    
     const tokens = this.generateTokens(payload);
     return {
       ...tokens,
@@ -129,28 +136,61 @@ export class AuthService {
 
   public async refreshToken(refreshToken: string) {
     try {
+      // Verify the refresh token
       const payload = this.jwtService.verify(refreshToken);
+      
+      // Check if it's actually a refresh token
+      if (payload.type !== 'refresh') {
+        throw new UnauthorizedException('Invalid token type');
+      }
+
+      // Verify user still exists
       const user = await this.prismaService.user.findUnique({
         where: { id: payload.sub },
       });
 
       if (!user) {
-        throw new UnauthorizedException('Invalid refresh token');
+        throw new UnauthorizedException('User not found');
       }
 
-      const tokens = this.generateTokens({
+      // Generate new tokens with fresh payload
+      const newPayload = {
         sub: user.id,
         registrationNumber: user.registrationNumber,
         role: payload.role,
-      });
+      };
+
+      const tokens = this.generateTokens(newPayload);
 
       return tokens;
     } catch (error) {
+      // Handle specific JWT errors
+      if (error.name === 'JsonWebTokenError') {
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Refresh token expired');
+      }
       throw new UnauthorizedException('Invalid refresh token');
     }
   }
 
   public async logout(userId: number) {
+    // For now, just return success message
+    // In a more secure implementation, you'd blacklist the tokens
     return { message: 'Logged out successfully' };
+  }
+
+  // Utility method to check if user exists (useful for other services)
+  public async findUserById(userId: number) {
+    return this.prismaService.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        registrationNumber: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 }

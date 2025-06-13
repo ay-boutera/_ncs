@@ -15,6 +15,11 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './decorators/roles.decorator';
 
+// DTO for refresh token request
+class RefreshTokenDto {
+  refreshToken: string;
+}
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -32,10 +37,10 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Post('refresh')
-  async refreshToken(@Req() req) {
-    return this.authService.refreshToken(req.user.refreshToken);
+  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshToken(refreshTokenDto.refreshToken);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -49,5 +54,12 @@ export class AuthController {
   @Get('admin-only')
   getAdminResource() {
     return { message: 'This is an admin-only resource' };
+  }
+
+  // Get current user info
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getCurrentUser(@Req() req) {
+    return this.authService.findUserById(req.user.sub);
   }
 }
