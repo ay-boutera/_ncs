@@ -34,7 +34,6 @@ export class RolesGuard implements CanActivate {
         `User with role '${user.role}' is not authorized to access this resource. Required role: '${requiredRole}'`,
       );
     }
-
     return true;
   }
 }

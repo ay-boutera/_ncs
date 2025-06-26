@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from './models/user/user.module';
-import { PostModule } from './models/post/post.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { OauthModule } from './oauth/oauth.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -14,11 +13,17 @@ import { OauthModule } from './oauth/oauth.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    UserModule,
-    PostModule,
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 10,
+        },
+      ],
+    }),
     MailerModule.forRoot({
       transport: {
-        service : "gmail",
+        service: 'gmail',
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass: process.env.EMAIL_PASSWORD,

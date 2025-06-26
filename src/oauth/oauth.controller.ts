@@ -33,3 +33,4 @@ export class OauthController {
     return await this.oauthService.validateUser(user);
   }
 }
+
