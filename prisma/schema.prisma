@@ -8,23 +8,15 @@ datasource db {
 }
 
 model User {
-  id                 Int      @id @default(autoincrement())
-  registrationNumber String   @unique
-  password           String
-  refreshTokens      RefreshToken[]
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id               Int      @id @default(autoincrement())
+  userName         String   @unique
+  firstName        String
+  lastName         String
+  email            String   @unique
+  password         String
+  verificationCode String?  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   @@map("users")
-}
-
-model RefreshToken {
-  id        String   @id @default(uuid())
-  token     String   @unique
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-
-  @@map("refresh_tokens")
 }

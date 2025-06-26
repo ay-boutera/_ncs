@@ -7,18 +7,21 @@ import {
   HttpStatus,
   Get,
   Req,
+  Param,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
-import { LocalAuthGuard } from '../auth/guards/local-auth.guard';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from './guards/roles.guard';
-import { Roles } from './decorators/roles.decorator';
-
-// DTO for refresh token request
-class RefreshTokenDto {
-  refreshToken: string;
-}
+import {
+  changePasswordDto,
+  ChangePasswordForLoggedInUserDto,
+  LoginDto,
+  RegisterDto,
+} from './dto/auth.dto';
+import { LocalAuthGuard } from '../common/guards/local-auth.guard';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { EmailDto } from './dto/auth.dto';
+import { VerifyCodeDto } from './dto/auth.dto';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -26,40 +29,55 @@ export class AuthController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
+  public async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
+  public async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Post('refresh')
-  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.refreshToken(refreshTokenDto.refreshToken);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async logout(@Req() req) {
-    return this.authService.logout(req.user.sub);
+  public async logout(@Req() req) {
+    return this.authService.logout(req.user);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
-  @Get('admin-only')
-  getAdminResource() {
-    return { message: 'This is an admin-only resource' };
+  @HttpCode(HttpStatus.OK)
+  @Post('refreshToken/:refresh_token')
+  public async refreshToken(@Param('refresh_token') refreshToken: string) {
+    return this.authService.refreshToken(refreshToken);
   }
 
-  // Get current user info
+  @HttpCode(HttpStatus.OK)
+  @Post('reset-password')
+  public async resetPassword(@Body() email: EmailDto) {
+    return this.authService.resetPassword(email);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('verify-code')
+  public async verifyCode(@Body() VerifyCodeDto: VerifyCodeDto) {
+    return this.authService.verifyCode(VerifyCodeDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('change-password')
+  public async changePassword(@Body() changePasswordDto: changePasswordDto) {
+    return this.authService.changePassword(changePasswordDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  @Get('me')
-  async getCurrentUser(@Req() req) {
-    return this.authService.findUserById(req.user.sub);
+  @Post('change-password-for-logged-in-user')
+  public async changePasswordForLoggedInUser(
+    @Body() ChangePasswordForLoggedInUserDto: ChangePasswordForLoggedInUserDto,
+  ) {
+    return this.authService.changePasswordForLoggedInUser(
+      ChangePasswordForLoggedInUserDto,
+    );
   }
 }
