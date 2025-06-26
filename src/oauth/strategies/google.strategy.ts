@@ -14,12 +14,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     });
   }
 
-  public async validate(
-    accessToken: string,
-    refreshToken: string,
-    profile: Profile,
-  ): Promise<any> {
+  public async validate(accessToken: string, refreshToken: string, profile: Profile): Promise<any> {
     const { name, emails, photos } = profile;
+
     const googleUser = {
       email: emails[0].value,
       firstName: name.givenName,
@@ -28,6 +25,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       accessToken,
       refreshToken,
     };
+    console.log('Google User:', googleUser);
     return googleUser;
   }
 }

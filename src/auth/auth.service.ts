@@ -16,6 +16,7 @@ import {
 } from './dto/auth.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as bcrypt from 'bcrypt';
+import generateTokens from '../common/jwt/generateTokens'
 
 @Injectable()
 export class AuthService {
@@ -38,28 +39,6 @@ export class AuthService {
     }
     const { password, ...result } = user; // Exclude password from result
     return result;
-  }
-
-  private generateTokens(payload: any) {
-    const accessToken = this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET,
-    });
-
-    // Add a unique identifier to refresh token payload to prevent reuse
-    const refreshPayload = {
-      ...payload,
-      countEx: 5,
-    };
-
-    const refreshToken = this.jwtService.sign(refreshPayload, {
-      secret: process.env.JWT_REFRESH_SECRET,
-      // here you can set a number of days which the refreshToken stay valid in it ,
-    });
-
-    return {
-      accessToken,
-      refreshToken,
-    };
   }
 
   public async register(registerDto: RegisterDto) {
@@ -100,13 +79,12 @@ export class AuthService {
 
     const { password: _, ...result } = user;
     const payload = {
-      sub: user.id,
-      userName: user.userName,
+      id: user.id,
       email: user.email,
-      role: 'USER',
+      role: user.role,
     };
 
-    const tokens = this.generateTokens(payload);
+    const tokens = generateTokens(this.jwtService, payload);
     return {
       user: {
         id: user.id,
@@ -114,7 +92,7 @@ export class AuthService {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        role: 'USER',
+        role: user.role,
       },
       ...tokens,
     };
@@ -136,13 +114,12 @@ export class AuthService {
     }
 
     const payload = {
-      sub: user.id,
-      userName: user.userName,
+      id: user.id,
       email: user.email,
-      role: 'USER',
+      role: user.role,
     };
 
-    const tokens = this.generateTokens(payload);
+    const tokens = generateTokens(this.jwtService, payload);
     return {
       user: {
         id: user.id,
@@ -150,7 +127,7 @@ export class AuthService {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        role: 'USER',
+        role: user.role,
       },
       ...tokens,
     };
@@ -181,7 +158,7 @@ export class AuthService {
         sub: newpayload.sub,
         userName: newpayload.userName,
         email: newpayload.email,
-        role: 'USER',
+        role: newpayload.role,
       };
 
       const accessToken = this.jwtService.sign(newpayloadaccess, {
@@ -326,16 +303,7 @@ export class AuthService {
   // Utility method to check if user exists (useful for other services)
   public async findUserById(userId: number) {
     return this.prismaService.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        userName: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      where: { id: userId }
     });
   }
 

@@ -7,14 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  user
+  admin
+}
+
 model User {
   id               Int      @id @default(autoincrement())
-  userName         String   @unique
+  userName         String?  @unique
   firstName        String
   lastName         String
   email            String   @unique
+  role             Role     @default(user)
   password         String
-  verificationCode String?  
+  picture          String   @default("https://example.com/default-profile.png")
+  verificationCode String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 

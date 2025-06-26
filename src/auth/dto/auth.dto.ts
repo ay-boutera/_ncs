@@ -23,7 +23,7 @@ export class LoginDto {
 }
 
 export class RegisterDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   userName: string;
 
@@ -86,7 +86,7 @@ export class changePasswordDto extends LoginDto {
 export class ChangePasswordForLoggedInUserDto {
   @IsNotEmpty()
   @IsInt()
-  userId : number;
+  userId: number;
 
   @IsNotEmpty()
   @IsString()
