@@ -311,7 +311,7 @@ export class UserService {
     try {
       const updatedUser = await this.prisma.user.update({
         where: { id: userId },
-        data: { isActive: false },
+        data: { isActive : false },
       });
 
       return;
