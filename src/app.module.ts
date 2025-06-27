@@ -40,11 +40,6 @@ import { APP_FILTER } from '@nestjs/core';
   ],
   // The controllers and providers arrays are optional here, as they are automatically registered by the imported modules.
   controllers: [],
-  providers: [
-    {
-      provide: APP_FILTER,
-      useClass: NotFoundExceptionFilter,
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}
