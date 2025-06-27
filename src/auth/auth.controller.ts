@@ -20,8 +20,6 @@ import { LocalAuthGuard } from '../common/guards/local-auth.guard';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { EmailDto } from './dto/auth.dto';
 import { VerifyCodeDto } from './dto/auth.dto';
-import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/decorators/roles.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -81,4 +79,3 @@ export class AuthController {
     );
   }
 }
-

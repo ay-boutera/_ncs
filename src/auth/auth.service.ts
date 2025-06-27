@@ -15,8 +15,8 @@ import {
   VerifyCodeDto,
 } from './dto/auth.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import * as bcrypt from 'bcrypt';
 import generateTokens from '../common/jwt/generateTokens'
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
