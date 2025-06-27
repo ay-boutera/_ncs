@@ -308,11 +308,12 @@ export class UserService {
       throw new BadRequestException('User ID is required');
     }
 
-    const dataToUpdate = { isActive: false }; // Soft delete by setting isActive to false 
     try {
       const updatedUser = await this.prisma.user.update({
         where: { id: userId },
-        data: dataToUpdate,
+        data: {
+          isActive: false,
+        },
       });
 
       return;
