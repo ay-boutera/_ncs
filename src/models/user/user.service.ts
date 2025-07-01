@@ -125,7 +125,7 @@ export class UserService {
         );
       }
 
-      // Handle case where user with given ID doesn't exist
+      // Handle case where user with given ID doesn't exist 
       if (error.code === 'P2025') {
         throw new NotFoundException(`User with ID ${id} not found`);
       }

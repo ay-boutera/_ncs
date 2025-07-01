@@ -24,8 +24,42 @@ model User {
   picture          String   @default("https://example.com/default-profile.png")
   verificationCode String?
   isActive         Boolean  @default(true)
+  pointBalance     Int      @default(0)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
   @@map("users")
+}
+
+model WasteType {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  @@map("waste_types")
+}
+
+model CollectionPoint {
+  id        Int    @id @default(autoincrement())
+  name      String
+  latitude  Float
+  longitude Float
+  address   String
+
+  @@map("collection_points")
+}
+
+model Partner {
+  id   Int    @id @default(autoincrement())
+  name String
+  type String // recycling_company, store, municipality
+
+  @@map("partners")
+}
+
+model EntrepreneurPartner {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("entrepreneur_partners")
 }
