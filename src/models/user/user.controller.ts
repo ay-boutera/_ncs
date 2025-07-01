@@ -33,24 +33,24 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
-  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
+  // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  // @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   @Get(':id')
   public async findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
 
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
-  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
+  // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  // @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   @Post('create')
   public async create(@Body() CreateUserDto: CreateUserDto) {
     return this.userService.create(CreateUserDto);
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
-  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
+  // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  // @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   @Patch(':id')
   public async update(
     @Param('id', ParseIntPipe) id: number,
@@ -60,8 +60,8 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
-  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
+  // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  // @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   @Delete(':id')
   public async delete(@Param('id', ParseIntPipe) id: number) {
     return this.userService.delete(id);
@@ -73,21 +73,21 @@ export class UserMeController {
   constructor(private readonly userService: UserService) {}
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Get('me')
   public async findMe(@Req() req: any) {
     return this.userService.findMe(req.user.id);
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Patch('me')
   public async updateMe(@Req() req: any, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.updateMe(req.user.id, updateUserDto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
   @Roles('user') // Only accessible by user
   @Delete('me')
   public async deleteMe(@Req() req: any) {

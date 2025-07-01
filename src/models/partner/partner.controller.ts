@@ -21,29 +21,29 @@ export class PartnerController {
   constructor(private readonly partnerService: PartnerService) {}
 
   @Post()
-  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
-  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
+  // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  // @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   create(@Body() createPartnerDto: CreatePartnerDto) {
     return this.partnerService.create(createPartnerDto);
   }
 
   @Get()
-  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
-  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
+  // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  // @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   findAll() {
     return this.partnerService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
-  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
+  // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  // @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.partnerService.findOne(id);
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
-  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
+  // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  // @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePartnerDto: UpdatePartnerDto,
@@ -52,8 +52,8 @@ export class PartnerController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
-  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
+  // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  // @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.partnerService.remove(id);
   }
