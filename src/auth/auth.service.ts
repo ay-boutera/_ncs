@@ -86,14 +86,7 @@ export class AuthService {
 
     const tokens = generateTokens(this.jwtService, payload);
     return {
-      user: {
-        id: user.id,
-        userName: user.userName,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role,
-      },
+      data : result,
       ...tokens,
     };
   }
@@ -118,11 +111,12 @@ export class AuthService {
       email: user.email,
       role: user.role,
     };
-    
 
+
+    const { password: _, ...result } = user;
     const tokens = generateTokens(this.jwtService, payload);
     return {
-      data: user,
+      data: result,
       ...tokens,
     };
   }
