@@ -15,16 +15,8 @@ async function bootstrap() {
   app.useGlobalFilters(notFoundFilter);
   app.use(helmetMiddleware());
   app.enableCors({
-    origin: '192.168.46.21:3000', // Allow all origins in development
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: [
-      'Origin',
-      'X-Requested-With',
-      'Content-Type',
-      'Accept',
-      'Authorization',
-      'Cache-Control',
-    ],
+    origin: 'http://192.168.46.16:3000', // Allow all origins in development
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   });
   app.useGlobalPipes(appValidationPipe);
