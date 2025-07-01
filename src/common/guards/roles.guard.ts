@@ -1,12 +1,7 @@
-// Role Decorator
-import { SetMetadata } from '@nestjs/common';
-
-export const ROLES_KEY = 'roles';
-export const Roles = (...roles: string[]) => SetMetadata(ROLES_KEY, roles);
-
-// Role Guard
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+
+export const ROLES_KEY = 'roles';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -28,6 +23,17 @@ export class RolesGuard implements CanActivate {
       return false;
     }
 
-    return requiredRoles.some((role) => user.roles?.includes(role));
+    // Check if user has a role property (could be string or array)
+    const userRole = user.role || user.roles;
+    
+    if (!userRole) {
+      return false;
+    }
+
+    // Handle both single role (string) and multiple roles (array)
+    const userRoles = Array.isArray(userRole) ? userRole : [userRole];
+    
+    // Check if user has any of the required roles
+    return requiredRoles.some((role) => userRoles.includes(role));
   }
 }

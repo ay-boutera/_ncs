@@ -25,36 +25,32 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Roles('admin')
-  @UseGuards(RolesGuard) // Only accessible by admin and superadmin roles
-  @UseGuards(AuthGuard) // Ensure you have a RolesGuard implemented
+  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   @Get('all')
   public async findAll(@Query() query: any) {
     return this.userService.findAll(query);
   }
 
   @HttpCode(HttpStatus.OK)
-  @Roles('admin') // Only accessible by admin and superadmin roles
-  @UseGuards(RolesGuard)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   @Get(':id')
   public async findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
 
   @HttpCode(HttpStatus.CREATED)
-  @Roles('admin') // Only accessible by admin and superadmin roles
-  @UseGuards(RolesGuard)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   @Post('create')
   public async create(@Body() CreateUserDto: CreateUserDto) {
     return this.userService.create(CreateUserDto);
   }
 
   @HttpCode(HttpStatus.OK)
-  @Roles('admin') // Only accessible by admin and superadmin roles
-  @UseGuards(RolesGuard)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   @Patch(':id')
   public async update(
     @Param('id', ParseIntPipe) id: number,
@@ -64,9 +60,8 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Roles('admin') // Only accessible by admin and superadmin roles
-  @UseGuards(RolesGuard)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
+  @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   @Delete(':id')
   public async delete(@Param('id', ParseIntPipe) id: number) {
     return this.userService.delete(id);
@@ -92,7 +87,7 @@ export class UserMeController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
   @Roles('user') // Only accessible by user
   @Delete('me')
   public async deleteMe(@Req() req: any) {
