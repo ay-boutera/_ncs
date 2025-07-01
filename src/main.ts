@@ -15,7 +15,7 @@ async function bootstrap() {
   app.useGlobalFilters(notFoundFilter);
   app.use(helmetMiddleware());
   app.enableCors({
-    origin: '*', // Allow all origins in development
+    origin: '192.168.46.21:3000', // Allow all origins in development
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
       'Origin',
