@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('user', 'admin', 'superAdmin');
 
+-- CreateEnum
+CREATE TYPE "PartnerStatus" AS ENUM ('active', 'inactive');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
@@ -34,7 +37,10 @@ CREATE TABLE "collection_points" (
     "name" TEXT NOT NULL,
     "latitude" DOUBLE PRECISION NOT NULL,
     "longitude" DOUBLE PRECISION NOT NULL,
-    "address" TEXT NOT NULL,
+    "capacity" DOUBLE PRECISION NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'active',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "collection_points_pkey" PRIMARY KEY ("id")
 );
@@ -43,18 +49,33 @@ CREATE TABLE "collection_points" (
 CREATE TABLE "partners" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "status" "PartnerStatus" NOT NULL DEFAULT 'active',
+    "service" TEXT[],
+    "content" TEXT NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
+    "address" TEXT NOT NULL,
+    "credits" INTEGER NOT NULL,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "partners_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "entrepreneur_partners" (
+CREATE TABLE "services" (
     "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
+    "address" TEXT NOT NULL,
+    "credits" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "entrepreneur_partners_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "services_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

@@ -75,7 +75,7 @@ model Partner {
 }
 
 model serviceProvider {
-  id        Int    @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
   longitude Float
   latitude  Float
