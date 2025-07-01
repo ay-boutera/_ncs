@@ -14,14 +14,8 @@ import { error } from 'console';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async findAll(query: any) {
-    // You can implement pagination, filtering, and sorting based on the query parameters
-    const { page = 1, limit = 10 } = query;
-    const skip = (page - 1) * limit;
-    const take = limit;
+  public async findAll() {
     const users = await this.prisma.user.findMany({
-      skip,
-      take,
       orderBy: { createdAt: 'desc' }, // Example sorting by creation date
     });
     const total = await this.prisma.user.count();
@@ -125,7 +119,7 @@ export class UserService {
         );
       }
 
-      // Handle case where user with given ID doesn't exist 
+      // Handle case where user with given ID doesn't exist
       if (error.code === 'P2025') {
         throw new NotFoundException(`User with ID ${id} not found`);
       }
