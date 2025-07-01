@@ -15,8 +15,9 @@ async function bootstrap() {
   app.useGlobalFilters(notFoundFilter);
   app.use(helmetMiddleware());
   app.enableCors({
-    origin: '*',
+    origin: true,
     methods: ["*"],
+    allowedHeaders : ["Content-Type", "Authorization", "X-Requested-With"],
   });
   app.useGlobalPipes(appValidationPipe);
   app.use(cookieParser());
