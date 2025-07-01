@@ -59,6 +59,10 @@ model Partner {
   status    PartnerStatus @default(active)
   service   String[] // recycling, waste, etc.
   content   String
+  longitude Float
+  latitude  Float
+  address   String
+  credits   Int
   startDate DateTime
   endDate   DateTime
   createdAt DateTime      @default(now())
