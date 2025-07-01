@@ -18,38 +18,43 @@ import { UserService } from './user.service';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @HttpCode(HttpStatus.OK)
+  @Roles('admin')
+  @UseGuards(RolesGuard) // Only accessible by admin and superadmin roles
   @UseGuards(AuthGuard) // Ensure you have a RolesGuard implemented
-  @Roles('admin') // Only accessible by admin and superadmin roles
   @Get('all')
   public async findAll(@Query() query: any) {
     return this.userService.findAll(query);
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Roles('admin') // Only accessible by admin and superadmin roles
+  @UseGuards(RolesGuard)
+  @UseGuards(AuthGuard)
   @Get(':id')
   public async findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
 
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(AuthGuard)
   @Roles('admin') // Only accessible by admin and superadmin roles
+  @UseGuards(RolesGuard)
+  @UseGuards(AuthGuard)
   @Post('create')
   public async create(@Body() CreateUserDto: CreateUserDto) {
     return this.userService.create(CreateUserDto);
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Roles('admin') // Only accessible by admin and superadmin roles
+  @UseGuards(RolesGuard)
+  @UseGuards(AuthGuard)
   @Patch(':id')
   public async update(
     @Param('id', ParseIntPipe) id: number,
@@ -59,8 +64,9 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(AuthGuard)
   @Roles('admin') // Only accessible by admin and superadmin roles
+  @UseGuards(RolesGuard)
+  @UseGuards(AuthGuard)
   @Delete(':id')
   public async delete(@Param('id', ParseIntPipe) id: number) {
     return this.userService.delete(id);
