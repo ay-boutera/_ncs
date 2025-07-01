@@ -1,4 +1,10 @@
-import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsNotEmpty,
+  IsOptional,
+  IsDate,
+} from 'class-validator';
 
 export class CreateCollectionPointDto {
   @IsString()
@@ -13,7 +19,11 @@ export class CreateCollectionPointDto {
   @IsNotEmpty()
   longitude: number;
 
+  @IsNumber()
+  @IsNotEmpty()
+  capacity: number;
+
   @IsString()
   @IsNotEmpty()
-  address: string;
+  status: string; // Should be 'active', 'inactive', or 'under_maintenance'
 }
