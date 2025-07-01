@@ -6,10 +6,9 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { OauthModule } from './oauth/oauth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { UserModule } from './models/user/user.module';
-import { NotFoundExceptionFilter } from './common/middleware/notFoundException.middleware';
-import { APP_FILTER } from '@nestjs/core';
 import { WasteTypeModule } from './models/waste-type/waste-type.module';
 import { CollectionPointModule } from './models/collection-point/collection-point.module';
+import { PartnerModule } from './models/partner/partner.module';
 
 @Module({
   imports: [
@@ -39,6 +38,7 @@ import { CollectionPointModule } from './models/collection-point/collection-poin
     UserModule,
     WasteTypeModule,
     CollectionPointModule,
+    PartnerModule,
   ],
   // The controllers and providers arrays are optional here, as they are automatically registered by the imported modules.
   controllers: [],

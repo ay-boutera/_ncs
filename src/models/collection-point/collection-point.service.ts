@@ -13,8 +13,14 @@ export class CollectionPointService {
     });
   }
 
-  public findAll() {
-    return this.prisma.collectionPoint.findMany();
+  public async findAll() {
+    const collectionPoints = await this.prisma.collectionPoint.findMany();
+
+    return {
+      message: 'Collection points fetched successfully',
+      total: collectionPoints.length,
+      collectionPoints,
+    };
   }
 
   public findOne(id: number) {

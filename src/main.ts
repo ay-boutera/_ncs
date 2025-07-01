@@ -14,9 +14,6 @@ async function bootstrap() {
   const notFoundFilter = new NotFoundExceptionFilter();
   app.useGlobalFilters(notFoundFilter);
   app.use(helmetMiddleware());
-  app.enableCors({
-    origin: '*',
-  });
   app.useGlobalPipes(appValidationPipe);
   app.use(cookieParser());
   app.use(sessionMiddleware());
@@ -25,6 +22,3 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
-
-
-

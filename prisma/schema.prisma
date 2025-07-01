@@ -48,18 +48,21 @@ model CollectionPoint {
   @@map("collection_points")
 }
 
-model Partner {
-  id   Int    @id @default(autoincrement())
-  name String
-  type String // recycling_company, store, municipality
-
-  @@map("partners")
+enum PartnerStatus {
+  active
+  inactive
 }
 
-model EntrepreneurPartner {
-  id        Int      @id @default(autoincrement())
+model Partner {
+  id        Int           @id @default(autoincrement())
+  name      String
+  status    PartnerStatus @default(active)
+  service   String[] // recycling, waste, etc.
+  content   String
+  startDate DateTime
+  endDate   DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("entrepreneur_partners")
+  @@map("partners")
 }
