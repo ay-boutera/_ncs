@@ -28,8 +28,8 @@ export class UserController {
   // @UseGuards(AuthGuard, RolesGuard) // AuthGuard MUST come first
   // @Roles('admin', 'superAdmin') // Allow both admin and superAdmin
   @Get('all')
-  public async findAll(@Query() query: any) {
-    return this.userService.findAll(query);
+  public async findAll() {
+    return this.userService.findAll();
   }
 
   @HttpCode(HttpStatus.OK)
