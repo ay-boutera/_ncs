@@ -49,9 +49,9 @@ export class CreatePartnerDto {
 
   @IsNotEmpty()
   @IsDate()
-  startDate: Date;
+  startDate: string;
 
   @IsNotEmpty()
   @IsDate()
-  endDate: Date;
+  endDate: string;
 }
