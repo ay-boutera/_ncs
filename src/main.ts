@@ -14,6 +14,19 @@ async function bootstrap() {
   const notFoundFilter = new NotFoundExceptionFilter();
   app.useGlobalFilters(notFoundFilter);
   app.use(helmetMiddleware());
+  app.enableCors({
+    origin: true, // Allow all origins in development
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+      'Authorization',
+      'Cache-Control',
+    ],
+    credentials: true,
+  });
   app.useGlobalPipes(appValidationPipe);
   app.use(cookieParser());
   app.use(sessionMiddleware());
