@@ -15,7 +15,7 @@ import {
   VerifyCodeDto,
 } from './dto/auth.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import generateTokens from '../common/jwt/generateTokens'
+import generateTokens from '../common/jwt/generateTokens';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -121,14 +121,7 @@ export class AuthService {
 
     const tokens = generateTokens(this.jwtService, payload);
     return {
-      user: {
-        id: user.id,
-        userName: user.userName,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role,
-      },
+      data: user,
       ...tokens,
     };
   }
@@ -303,7 +296,7 @@ export class AuthService {
   // Utility method to check if user exists (useful for other services)
   public async findUserById(userId: number) {
     return this.prismaService.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
   }
 
@@ -408,4 +401,3 @@ export class AuthService {
     });
   }
 }
-
