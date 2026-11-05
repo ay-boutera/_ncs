@@ -1,101 +1,99 @@
+<h1 align="center">NCS: waste collection and recycling platform (backend)</h1>
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  A REST API for a recycling platform: collection points on a map, types of waste,
+  partner companies, and user accounts with a reward point balance.
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  <img alt="NestJS 10" src="https://img.shields.io/badge/NestJS-10-E0234E?logo=nestjs&logoColor=white">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white">
+  <img alt="Prisma 6" src="https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white">
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white">
+  <img alt="Passport" src="https://img.shields.io/badge/auth-Passport_JWT_%2B_Google-34E27A?logo=passport&logoColor=black">
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Overview
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The backend of a platform that helps people recycle: it lists the **collection points** (with their position, capacity and status), the **types of waste** they accept, and the **partners** (recycling and waste companies, with their services, location and contract dates). Each user has a **point balance**, the base for rewarding recycling.
 
-## Project setup
+It started from a NestJS authentication starter of mine, which provides the accounts, tokens and Google sign-in.
 
-```bash
-$ npm install
-```
+## Features
 
-## Compile and run the project
+- **Accounts:** registration, login (Passport local strategy), JWT access and refresh tokens, logout, password reset with a code sent by email, password change, and sign-in or sign-up with Google.
+- **Roles:** `user`, `admin` and `superAdmin`, with an `@Roles()` decorator and a roles guard. During development the guards are switched off on most routes (they are commented out in the controllers).
+- **Collection points:** create, list, view, update and delete; latitude and longitude, capacity, and a status (`active`, `inactive`, `under_maintenance`).
+- **Waste types:** create, list, view, update and delete.
+- **Partners:** create, list, view, update and delete; services offered, status, address and coordinates, credits, contract start and end dates.
+- **Users:** admin management of accounts, and `/userMe/me` for the signed-in user's own profile.
+- **Security:** Helmet headers, a global validation pipe (`class-validator`), CORS with credentials, sessions for the Google flow, and a JSON 404 for unknown routes.
 
-```bash
-# development
-$ npm run start
+## API
 
-# watch mode
-$ npm run start:dev
+| Area              | Routes                                                                                                                               |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Auth              | `POST /auth/register`, `/auth/login`, `/auth/logout`, `/auth/refreshToken/:refresh_token`, `/auth/reset-password`, `/auth/verify-code`, `/auth/change-password`, `/auth/change-password-for-logged-in-user` |
+| Google            | `GET /oauth/google/sign`, `GET /oauth/google_/callback`, `POST /oauth/callback/sign`                                                  |
+| Users             | `GET /user/all`, `GET /user/:id`, `POST /user/create`, `PATCH /user/:id`, `DELETE /user/:id`; `GET`, `PATCH` and `DELETE /userMe/me` |
+| Collection points | `POST /collection-points/create`, `GET /collection-points`, `GET`, `PATCH` and `DELETE /collection-points/:id`                       |
+| Waste types       | `POST /waste-types`, `GET /waste-types`, `GET`, `PATCH` and `DELETE /waste-types/:id`                                                |
+| Partners          | `POST /partner`, `GET /partner`, `GET`, `PATCH` and `DELETE /partner/:id`                                                            |
 
-# production mode
-$ npm run start:prod
-```
+## Tech stack
 
-## Run tests
+| Area           | Tools                                                             |
+| -------------- | ----------------------------------------------------------------- |
+| API            | NestJS 10, TypeScript, `class-validator`, `class-transformer`      |
+| Database       | PostgreSQL, Prisma 6 (migrations in `prisma/migrations`)           |
+| Authentication | Passport (local, JWT, Google OAuth 2.0), bcrypt, express-session   |
+| Email          | `@nestjs-modules/mailer` with Nodemailer (Gmail)                   |
+| Security       | Helmet, CORS, validation pipe                                      |
 
-```bash
-# unit tests
-$ npm run test
+## Getting started
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+**Requirements:** Node.js 18 or later and a PostgreSQL database.
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+git clone https://github.com/ay-boutera/_ncs.git
+cd _ncs
+npm install                 # also generates the Prisma client
+# create .env (see below), then:
+npx prisma migrate deploy
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+The API listens on `PORT` (3000 by default).
 
-## Resources
+### Configuration
 
-Check out a few resources that may come in handy when working with NestJS:
+Create a `.env` file at the project root and keep it out of Git.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+| Variable                                                          | Purpose                                  |
+| ----------------------------------------------------------------- | ---------------------------------------- |
+| `DATABASE_URL`                                                    | PostgreSQL connection string             |
+| `PORT`                                                            | HTTP port (3000 by default)              |
+| `JWT_SECRET`, `JWT_REFRESH_SECRET`                                | Sign the access and refresh tokens       |
+| `SESSION_SECRET`                                                  | Session cookie used by the Google flow   |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_CALLBACK_URL` | Google OAuth 2.0                         |
+| `EMAIL_USERNAME`, `EMAIL_PASSWORD`                                | Gmail account (app password) for emails  |
 
-## Support
+## Project structure
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+src/
+├── auth/            # register, login, tokens, password reset (local and JWT strategies)
+├── oauth/           # Google sign-in
+├── models/
+│   ├── user/            # accounts and the signed-in user's profile
+│   ├── collection-point/
+│   ├── waste-type/
+│   └── partner/
+├── common/          # guards, decorators, roles, JWT helpers, middleware, validation pipe
+└── prisma/          # Prisma client service
+prisma/              # schema and migrations
+```
 
-## Stay in touch
+## Author
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-
-# nest*js_init*
+[Boutera Ahmed Yassine](https://github.com/ay-boutera)
